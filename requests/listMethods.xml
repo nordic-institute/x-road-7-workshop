@@ -1,0 +1,23 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:iden="http://x-road.eu/xsd/identifiers" xmlns:xrd="http://x-road.eu/xsd/xroad.xsd">
+    <SOAP-ENV:Header>
+        <xrd:client iden:objectType="SUBSYSTEM">
+            <iden:xRoadInstance>TEST</iden:xRoadInstance>
+            <iden:memberClass>COM</iden:memberClass>
+            <iden:memberCode>4321</iden:memberCode>
+            <iden:subsystemCode>TestClient</iden:subsystemCode>
+        </xrd:client>
+        <xrd:service iden:objectType="SERVICE">
+            <iden:xRoadInstance>TEST</iden:xRoadInstance>
+            <iden:memberClass>GOV</iden:memberClass>
+            <iden:memberCode>1234</iden:memberCode>
+            <iden:subsystemCode>TestService</iden:subsystemCode>
+            <iden:serviceCode>listMethods</iden:serviceCode>
+        </xrd:service>
+        <xrd:userId>tuser</xrd:userId>
+        <xrd:id>ID11234</xrd:id>
+        <xrd:protocolVersion>4.0</xrd:protocolVersion>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body>
+        <xrd:listMethods/>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

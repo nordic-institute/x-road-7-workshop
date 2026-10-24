@@ -1,0 +1,113 @@
+services:
+  cs:
+    image: niis/xroad-central-server:noble-7.8.3
+    container_name: cs
+    entrypoint: ["/bin/bash", "/workshop/copy-config.sh"]
+    command: ["/root/entrypoint.sh"]
+    environment:
+      XROAD_TOKEN_PIN: 123456xrd!
+    ports:
+      - 4000:4000
+    volumes:
+      - cs-db-volume:/var/lib/postgresql/16/main
+      - cs-conf-volume:/etc/xroad
+      - ./config/copy-config.sh:/workshop/copy-config.sh:ro
+      - ./config/cs:/workshop/config:ro
+    networks:
+      - xroad-network
+
+  ca:
+    image: ghcr.io/nordic-institute/xrddev-testca:latest
+    container_name: ca
+    ports:
+      - 8888:8888
+    volumes:
+      - ca-volume:/home/ca
+    networks:
+      - xroad-network
+      
+  ss1:
+    image: niis/xroad-security-server-sidecar:7.8.3
+    container_name: ss1
+    entrypoint: ["/bin/bash", "/workshop/copy-config.sh"]
+    command: ["/root/entrypoint.sh"]
+    ports:
+      - 1000:4000
+      - 1080:8080
+      - 1443:8443
+    environment:
+      XROAD_TOKEN_PIN: 123456xrd!
+      XROAD_ADMIN_USER: xrd
+      XROAD_ADMIN_PASSWORD: secret
+      XROAD_LOG_LEVEL: INFO
+    volumes:
+      - ss1-db-volume:/var/lib/postgresql/16/main
+      - ss1-conf-volume:/etc/xroad
+      - ss1-archive-volume:/var/lib/xroad
+      - ./config/copy-config.sh:/workshop/copy-config.sh:ro
+      - ./config/ss1:/workshop/config:ro
+    networks:
+      - xroad-network
+    depends_on:
+      - cs
+      - ca
+  
+  ss2:
+    image: niis/xroad-security-server-sidecar:7.8.3
+    container_name: ss2
+    entrypoint: ["/bin/bash", "/workshop/copy-config.sh"]
+    command: ["/root/entrypoint.sh"]
+    ports:
+      - 2000:4000
+      - 2080:8080
+      - 2443:8443
+    environment:
+      XROAD_TOKEN_PIN: 123456xrd!
+      XROAD_ADMIN_USER: xrd
+      XROAD_ADMIN_PASSWORD: secret
+      XROAD_LOG_LEVEL: INFO
+    volumes:
+      - ss2-db-volume:/var/lib/postgresql/16/main
+      - ss2-conf-volume:/etc/xroad
+      - ss2-archive-volume:/var/lib/xroad
+      - ./config/copy-config.sh:/workshop/copy-config.sh:ro
+      - ./config/ss2:/workshop/config:ro
+    networks:
+      - xroad-network
+    depends_on:
+      - cs
+      - ca
+
+  is:
+    image: niis/example-adapter:latest
+    container_name: is
+    ports:
+      - 3080:8080
+    networks:
+      - xroad-network
+      
+volumes:
+  cs-db-volume:
+    name: cs-db-data
+  cs-conf-volume:
+    name: cs-conf-data
+  ca-volume:
+    name: ca-data
+  ss1-db-volume:
+    name: ss1-db-data
+  ss1-conf-volume:
+    name: ss1-conf-data
+  ss1-archive-volume:
+    name: ss1-archive-data
+  ss2-db-volume:
+    name: ss2-db-data
+  ss2-conf-volume:
+    name: ss2-conf-data
+  ss2-archive-volume:
+    name: ss2-archive-data
+
+networks:
+  xroad-network:
+    name: xroad-network
+    driver: bridge
+
