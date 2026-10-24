@@ -39,6 +39,8 @@ docker logs -f ss1
 > [!WARNING]
 > The Central Server image is intended for testing only. Do not use it in production.
 
+When the containers are running, configure the environment with the [Configuration Guide](docs/configuration-guide.md).
+
 ## Members and Subsystems
 
 The workshop builds the following X-Road instance `TEST`. Member classes are `COM` (Companies) and `GOV` (Government).
@@ -66,6 +68,8 @@ Add the SOAP services with the WSDL address `http://is:8080/example-adapter/Endp
 The connection type of `TestClient` is HTTP.
 
 ## Configuration
+
+For step-by-step instructions, see the [Configuration Guide](docs/configuration-guide.md).
 
 Use these values when following the X-Road configuration guides:
 
@@ -153,7 +157,15 @@ The connection type of the client subsystem decides which port to use. `TestClie
 
 ### Sending Requests
 
-[`scripts/send-request.sh`](scripts/send-request.sh) runs curl (`curlimages/curl:8.11.1`) in a container attached to `xroad-network`, so the servers can be reached by their container names. All arguments are passed to curl as-is.
+[`scripts/send-request.sh`](scripts/send-request.sh) runs curl (`curlimages/curl:8.11.1`) in a container attached to `xroad-network`, so the servers can be reached by their container names. All arguments are passed to curl as-is. The script hides curl's progress meter by default; add `--progress-meter` to show it.
+
+JSON and XML responses are pretty-printed by [`scripts/format-response.py`](scripts/format-response.py), which runs in a `python:3.13.1-alpine` container, so Python doesn't need to be installed on the host: the script only needs bash and Docker. Response headers printed with `-i` and other content types, such as YAML, are shown unchanged. To print the response exactly as received, pass `--raw` as the first argument:
+
+```bash
+../scripts/send-request.sh --raw -d @getRandom.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
+```
+
+The first request downloads the curl and Python images, so it takes longer than the following ones.
 
 The current directory is mounted as the working directory, so `-d @file.xml` works for files under it but not for paths such as `../file.xml`. Run the script from the `requests` directory:
 
