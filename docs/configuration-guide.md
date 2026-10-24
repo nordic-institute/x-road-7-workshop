@@ -28,15 +28,15 @@ The steps follow the NIIS Knowledge Base article [How to Configure Central Serve
 
 Use these values throughout the guide:
 
-| Setting | Value |
-| --- | --- |
-| Instance identifier | `TEST` |
-| Central Server address | `cs` |
-| PIN (Central Server and software tokens) | `123456xrd!` |
-| User interface credentials | `xrd` / `secret` |
-| Central Server UI | <https://localhost:4000> |
-| Security Server `ss1` UI | <https://localhost:1000> |
-| Security Server `ss2` UI | <https://localhost:2000> |
+| Setting                                   | Value                    |
+|-------------------------------------------|--------------------------|
+| Instance identifier                       | `TEST`                   |
+| Central Server address                    | `cs`                     |
+| PIN (Central Server and Security Servers) | `123456xrd!`             |
+| User interface credentials                | `xrd` / `secret`         |
+| Central Server UI                         | <https://localhost:4000> |
+| Security Server `ss1` UI                  | <https://localhost:1000> |
+| Security Server `ss2` UI                  | <https://localhost:2000> |
 
 > [!WARNING]
 > Do not use several user interfaces in the same browser at the same time, because their sessions conflict. Use separate browsers or private windows instead.
@@ -67,6 +67,7 @@ Error messages about missing configuration appear afterwards. They are expected 
 2. Select `certs/ca.pem` and press **Upload**.
 3. Fill in the certification service settings:
    * **Certificate Profile Info**: `ee.ria.xroad.common.certificateprofile.impl.BasicACMECertificateProfileInfoProvider`
+   * **This CA can be used for ACME**: select.
    * **ACME server directory URL**: `http://ca:8887`
    * **ACME server IP address(es)**: leave empty.
    * **Authentication certificate profile id**: leave empty.
@@ -80,13 +81,15 @@ Add the OCSP responder:
 1. Open `Test CA` and go to **OCSP Responders**.
 2. Press **Add**.
 3. Enter the URL `http://ca:8888` and upload `certs/ocsp.pem`.
-4. Press **Save**.
+4. Select **Free**.
+5. Press **Save**.
 
 ### 1.4 Add the Timestamping Service
 
 1. Go to **Trust Services → Timestamping Services** and press **Add timestamping service**.
 2. Enter the URL `http://ca:8899` and upload `certs/tsa.pem`.
-3. Press **Add**.
+3. Select **Free**.
+4. Press **Add**.
 
 The timestamping service appears as `Test TSA`.
 
@@ -99,7 +102,7 @@ The timestamping service appears as `Test TSA`.
    * **Member code**: `1234`
 3. Press **OK**.
 4. Open `Operator`, go to **Subsystems** and press **Add new subsystem**.
-5. Enter the subsystem code `MANAGEMENT` and press **Add**.
+5. Enter the subsystem code `MANAGEMENT`, subsystem name `Management` and press **Add**.
 6. Add a second member with name `Organisation 1`, class `COM` and code `4321`.
 
 Do not add `TestService` or `TestClient` here. You add them on the Security Servers, and the Central Server creates them when their client registration requests are approved.
@@ -168,9 +171,11 @@ Order the authentication certificate:
    * **Certification Service**: **Test CA**
    * **CSR Format**: **DER**
 4. Press **Continue**.
-5. Enter `ss1` in **Server DNS Name (CN)** and in **Subject Alternative Name (SAN)**. Keep the other fields as prefilled, such as **Organization Name (O)**.
-6. The last step offers **Generate CSR**, which saves the CSR to a file, and the option to order the certificate from the ACME server and import the returned certificate to the token. Press **Order Certificate**.
-7. When "Certificate successfully ordered" is shown, press **Done**.
+5. Enter `ss1` in **Server DNS Name (CN)** and in **Subject Alternative Name (SAN)**.
+6. Add your preferred two-letter country code in **Country Code (C)**, such as `FI`.
+7. Keep the other fields as prefilled, such as **Organization Name (O)**.
+8. The last step offers **Generate CSR**, which saves the CSR to a file, and the option to order the certificate from the ACME server and import the returned certificate to the token. Press **Order Certificate**.
+9. When "Certificate successfully ordered" is shown, press **Done**.
 
 Order the signing certificate:
 
@@ -182,8 +187,10 @@ Order the signing certificate:
    * **Certification Service**: **Test CA**
    * **CSR Format**: **DER**
 4. Press **Continue**.
-5. Enter `ss1`  in **Subject Alternative Name (SAN)**. Keep the other fields as prefilled.
-6. Press **Order Certificate**, then **Done**.
+5. Enter `ss1` in **Subject Alternative Name (SAN)**.
+6. Add your preferred two-letter country code in **Country Code (C)**, such as `FI`.
+7. Keep the other fields as prefilled.
+8. Press **Order Certificate**, then **Done**.
 
 The signing certificate is activated automatically and its OCSP status becomes good. The authentication certificate is activated after you register it in the next step.
 
@@ -286,9 +293,11 @@ Order the authentication certificate:
    * **Certification Service**: **Test CA**
    * **CSR Format**: **DER**
 4. Press **Continue**.
-5. Enter `ss2` in **Server DNS Name (CN)** and in **Subject Alternative Name (SAN)**. Keep the other fields as prefilled, such as **Organization Name (O)**.
-6. The last step offers **Generate CSR**, which saves the CSR to a file, and the option to order the certificate from the ACME server and import the returned certificate to the token. Press **Order Certificate**.
-7. When "Certificate successfully ordered" is shown, press **Done**.
+5. Enter `ss2` in **Server DNS Name (CN)** and in **Subject Alternative Name (SAN)**.
+6. Add your preferred two-letter country code in **Country Code (C)**, such as `FI`.
+7. Keep the other fields as prefilled, such as **Organization Name (O)**.
+8. The last step offers **Generate CSR**, which saves the CSR to a file, and the option to order the certificate from the ACME server and import the returned certificate to the token. Press **Order Certificate**.
+9. When "Certificate successfully ordered" is shown, press **Done**.
 
 Order the signing certificate:
 
@@ -300,8 +309,10 @@ Order the signing certificate:
    * **Certification Service**: **Test CA**
    * **CSR Format**: **DER**
 4. Press **Continue**.
-5. Enter `ss2` in  **Subject Alternative Name (SAN)**. Keep the other fields as prefilled.
-6. Press **Order Certificate**, then **Done**.
+5. Enter `ss2` in **Subject Alternative Name (SAN)**.
+6. Add your preferred two-letter country code in **Country Code (C)**, such as `FI`.
+7. Keep the other fields as prefilled.
+8. Press **Order Certificate**, then **Done**.
 
 The signing certificate is activated automatically and its OCSP status becomes good. The authentication certificate is activated after you register it in the next step.
 
@@ -348,7 +359,13 @@ Wait until `TestService` is REGISTERED. The request is approved automatically.
 
 1. Open `TestService` and go to the **Services** tab.
 2. Press **Add WSDL**, enter `http://is:8080/example-adapter/Endpoint?wsdl` and press **Add**.
-3. Enable the WSDL with its toggle.
+3. Enable the WSDL with its toggle and expand it with **>**.
+4. Click `getRandom.v1` and set:
+   * **Service URL**: the management services address, `http://is:8080/example-adapter/Endpoint`
+   * **Timeout**: keep the default.
+   * **Verify TLS certificate**: unchecked.
+   * **Apply to all in WSDL**: checked.
+5. Press **Save** and close the dialog.
 
 The WSDL adds the services `getRandom`, `helloService`, `listPeople` and `personDetails`, all version `v1`, with the service URL `http://is:8080/example-adapter/Endpoint`.
 
@@ -368,8 +385,15 @@ This step needs internet access from `ss1`.
 2. Select **OpenAPI 3 Description** and enter:
    * **URL**: `https://d14r9k0rinox9f.cloudfront.net/yaml/x-road-stats.yaml`
    * **Service Code**: `XRoadStatistics`
-3. Press **Add** and enable the service with its toggle.
-4. Grant `TestClient` access to `XRoadStatistics` as in [4.3](#43-grant-access-rights).
+3. Press **Add**, enable the service with its toggle and expand it with **>**.
+4. Click `XRoadStatistics` and set:
+   * **Service URL**: keep the default.
+   * **Timeout**: keep the default.
+   * **Verify TLS certificate**: unchecked.
+5. Press **Save** and press **Add subjects**.
+6. Press **Search**.
+7. Select **Test client** (`TEST:COM:4321:TestClient`) and press **Add selected**.
+8. Click **Close**.
 
 ## 5. Test the Environment
 
@@ -438,3 +462,17 @@ The response is the OpenAPI 3 description in YAML.
 With `-i`, curl also prints the response headers. The `x-road-client` and `x-road-service` headers show the identifiers the request used.
 
 If the response is an error about the client connection type, check that the connection type of `TestClient` is **HTTP** ([3.6](#36-add-the-testclient-subsystem)).
+
+## 6. Cleanup
+
+To stop the environment without removing the resources:
+
+```bash
+docker compose stop
+```
+
+To remove the containers and all volumes, including the CA and its keys:
+
+```bash
+docker compose down -v
+```
