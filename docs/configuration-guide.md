@@ -6,19 +6,25 @@ The steps follow the NIIS Knowledge Base article [How to Configure Central Serve
 
 ## Before You Begin
 
-1. Start the environment from the repository root:
+1. Download the required container images from the repository root:
+
+   ```bash
+   docker compose pull
+   ```
+
+2. Start the environment:
 
    ```bash
    docker compose up -d
    ```
 
-2. Follow the logs and wait until all containers have started:
+3. Follow the logs and wait until all containers have started:
 
    ```bash
    docker compose logs -f
    ```
 
-3. Copy the CA, OCSP responder and TSA certificates to `certs/`:
+4. Copy the CA, OCSP responder and TSA certificates to `certs/`:
 
    ```bash
    scripts/export-ca-certs.sh
