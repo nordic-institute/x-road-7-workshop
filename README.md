@@ -41,7 +41,7 @@ docker logs -f ss1
 ```
 
 > [!WARNING]
-> The Central Server image is intended for testing only. Do not use it in production.
+> The Central Server and Certificate Authority (CA) images are intended for testing only. Do not use them in production.
 
 When the containers are running, configure the environment with the [Configuration Guide](docs/configuration-guide.md).
 
