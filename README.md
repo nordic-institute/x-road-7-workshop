@@ -16,6 +16,10 @@ The environment consists of the following containers, all attached to the bridge
 
 Configuration and data are stored in named volumes, so you can recreate the containers without losing their state. See [Volumes and Resetting](#volumes-and-resetting).
 
+![Workshop environment: Central Server, trust services, Security Servers ss1 and ss2, the example information system and the external REST API](docs/workshop-environment.svg)
+
+The diagram is drawn with the X-Road draw.io library. Its source is [`docs/workshop-environment.drawio`](docs/workshop-environment.drawio).
+
 ## Run the Containers
 
 Start the environment from the repository root:
