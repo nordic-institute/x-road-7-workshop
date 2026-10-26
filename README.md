@@ -148,6 +148,21 @@ Upload them to the Central Server:
 
 Run the script again whenever the `ca-data` volume is recreated.
 
+### OCSP Cache
+
+To empty the OCSP response cache of a Security Server and make it fetch new OCSP responses, give the server name (`ss1` or `ss2`) to [`scripts/clear-ocsp-cache.sh`](scripts/clear-ocsp-cache.sh):
+
+```bash
+scripts/clear-ocsp-cache.sh ss1
+```
+
+The script follows the NIIS Knowledge Base article [How to Empty the OCSP Cache on the Security Server](https://nordic-institute.atlassian.net/wiki/spaces/XRDKB/pages/4916758/How+to+Empty+the+OCSP+Cache+on+the+Security+Server), adapted to the Sidecar container, where the services run under supervisord:
+
+1. Stops `xroad-signer`.
+2. Moves the cached responses from `/var/cache/xroad` to `/tmp/ocsp-cache-<timestamp>` in the container.
+3. Starts `xroad-signer`. The software token stays logged in over the restart.
+4. Waits up to two minutes until new OCSP responses are in the cache.
+
 ## Testing the Environment
 
 The consumer ports of the Security Servers are:
@@ -166,19 +181,15 @@ The connection type of the client subsystem decides which port to use. `TestClie
 JSON and XML responses are pretty-printed by [`scripts/format-response.py`](scripts/format-response.py), which runs in a `python:3.13.1-alpine` container, so Python doesn't need to be installed on the host: the script only needs bash and Docker. Response headers printed with `-i` and other content types, such as YAML, are shown unchanged. To print the response exactly as received, pass `--raw` as the first argument:
 
 ```bash
-../scripts/send-request.sh --raw -d @getRandom.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
+scripts/send-request.sh --raw -d @requests/getRandom.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
 ```
 
 The first request downloads the curl and Python images, so it takes longer than the following ones.
 
-The current directory is mounted as the working directory, so `-d @file.xml` works for files under it but not for paths such as `../file.xml`. Run the script from the `requests` directory:
+The current directory is mounted as the working directory, so `-d @file.xml` works for files under it but not for paths such as `../file.xml`.
 
 ```bash
-cd requests
-```
-
-```bash
-../scripts/send-request.sh -d @getRandom.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
+scripts/send-request.sh -d @requests/getRandom.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
 ```
 
 `requests/` contains these example requests from `TestClient` to `TestService`:

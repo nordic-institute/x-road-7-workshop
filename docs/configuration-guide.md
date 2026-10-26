@@ -412,7 +412,7 @@ cd requests
 List the services of `TestService`:
 
 ```bash
-../scripts/send-request.sh -d @listMethods.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
+scripts/send-request.sh -d @requests/listMethods.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
 ```
 
 The response lists the services you added in [4.2](#42-add-the-soap-services).
@@ -420,7 +420,7 @@ The response lists the services you added in [4.2](#42-add-the-soap-services).
 Call `getRandom`:
 
 ```bash
-../scripts/send-request.sh -d @getRandom.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
+scripts/send-request.sh -d @requests/getRandom.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
 ```
 
 The response contains a random number.
@@ -428,18 +428,14 @@ The response contains a random number.
 Call `helloService`:
 
 ```bash
-../scripts/send-request.sh -d @helloService.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
+scripts/send-request.sh -d @requests/helloService.xml --header "Content-Type: text/xml" -X POST http://ss2:8080
 ```
 
 The response contains "Hello Test! Greetings from adapter server!".
 
 ### REST Service
 
-These calls test the `XRoadStatistics` REST service from the optional step [4.4](#44-optional-add-a-rest-service). They don't use request files, so run them from the repository root:
-
-```bash
-cd ..
-```
+These calls test the `XRoadStatistics` REST service from step [4.4](#44-add-a-rest-service). They don't use request files.
 
 List the X-Road instances that the statistics API knows about:
 
