@@ -4,6 +4,17 @@ A local X-Road 7 test environment for the workshop, run with Docker Compose. It 
 
 The setup follows the NIIS Knowledge Base article [How to Set Up a Local Test Environment Using Docker Compose](https://nordic-institute.atlassian.net/wiki/spaces/XRDKB/pages/281739671/How+to+Set+Up+a+Local+Test+Environment+Using+Docker+Compose) and adds pre-made configuration files, helper scripts and example requests.
 
+## Prerequisites
+
+Running the workshop environment requires a computer that meets the following minimum requirements:
+
+- **CPU:** 4 vCPUs
+- **RAM:** 16 GB
+- **Storage:** 30 GB of available disk space
+- **Installed software:** Git, Docker, and Docker Compose
+- **Network:** Internet connection of at least 100 Mbps
+- **Operating system:** Linux or macOS is required to run the utility scripts in `scripts/`
+
 ## Overview
 
 The environment consists of the following containers, all attached to the bridge network `xroad-network`:
