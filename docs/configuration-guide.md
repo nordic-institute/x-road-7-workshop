@@ -6,25 +6,39 @@ The steps follow the NIIS Knowledge Base article [How to Configure Central Serve
 
 ## Before You Begin
 
-1. Download the required container images from the repository root:
+1. Clone the workshop repository:
+
+   ```bash
+   git clone https://github.com/nordic-institute/x-road-7-workshop.git
+   ```
+
+2. Navigate to the workshop directory:
+
+   ```bash
+   cd x-road-7-workshop
+   ```
+   
+3. Download the required container images from the repository root:
 
    ```bash
    docker compose pull
    ```
 
-2. Start the environment:
+4. Start the environment:
 
    ```bash
    docker compose up -d
    ```
 
-3. Follow the logs and wait until all containers have started:
+5. Follow the logs and wait until all containers have started:
 
    ```bash
    docker compose logs -f
    ```
 
-4. Copy the CA, OCSP responder and TSA certificates to `certs/`:
+6. Copy the CA, OCSP responder and TSA certificates to `certs/`:
+
+   **Note:** Don't complete this step until all containers have started.
 
    ```bash
    scripts/export-ca-certs.sh
